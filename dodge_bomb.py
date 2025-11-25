@@ -75,8 +75,8 @@ def main():
         avy = vy*bb_accs[min(tmr//500, 9)]  # 加速度を考慮した縦速度
         bb_img = bb_imgs[min(tmr//500, 9)]  # 加速度を考慮した爆弾画像
         
-        for event in pg.event.get():
-            if event.type == pg.QUIT: 
+        for event in pg.event.get():  # イベント処理
+            if event.type == pg.QUIT:  # 終了イベント
                 return
         
         if kk_rct.colliderect(bb_rct):  # こうかとんと爆弾が衝突したら
