@@ -42,6 +42,17 @@ def gameover(screen: pg.Surface) -> None:
     pg.display.update()  # 画面更新
     time.sleep(5)  # 5秒間表示
 
+def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
+    bb_imgs = []  # 爆弾画像リスト
+    bb_accs = []  # 爆弾速度リスト
+    for r in range(1, 11):
+        bb_img = pg.Surface((20 * r, 20 * r))  # 空のSurface
+        pg.draw.circle(bb_img, (255, 0, 0), (10 * r, 10 * r), 10 * r)  # 赤い円を描画
+        bb_img.set_colorkey((0, 0, 0))  # 黒色を透明色に設定
+        bb_imgs.append(bb_img)
+        bb_accs = [a for a in range(1, 11)]
+    return bb_imgs, bb_accs
+
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -57,7 +68,13 @@ def main():
     vx,vy = +5, +5  # 爆弾の横速度,縦速度
     clock = pg.time.Clock()
     tmr = 0
+    bb_imgs, bb_accs = init_bb_imgs()
     while True:
+        
+        avx = vx*bb_accs[min(tmr//500, 9)]  # 加速度を考慮した横速度
+        avy = vy*bb_accs[min(tmr//500, 9)]  # 加速度を考慮した縦速度
+        bb_img = bb_imgs[min(tmr//500, 9)]  # 加速度を考慮した爆弾画像
+        
         for event in pg.event.get():
             if event.type == pg.QUIT: 
                 return
@@ -90,10 +107,11 @@ def main():
         screen.blit(kk_img, kk_rct)
         yoko, tate = check_bound(bb_rct)
         if not yoko:  # 横方向にはみ出ていたら
-            vx *= -1
+            avx *= -1
         if not tate:  # 縦方向にはみ出ていたら
-            vy *= -1
-        bb_rct.move_ip(vx,vy)
+            avy *= -1
+        bb_rct.move_ip(avx,avy)
+        bb_rct.width = bb_img.get_rect().width
         screen.blit(bb_img, bb_rct)
         pg.display.update()
         tmr += 1
