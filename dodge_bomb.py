@@ -27,6 +27,11 @@ def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
     return yoko, tate
 
 def gameover(screen: pg.Surface) -> None:
+    """
+    引数：screen(背景Surface)
+    戻り値：なし
+    ゲームオーバー画面を表示する関数
+    """
     bl_img = pg.Surface((WIDTH, HEIGHT))  # 空のSurface
     pg.draw.rect(bl_img, (0, 0, 0), (0, 0, 20, 20))  # 黒い四角を描画
     bl_img.set_alpha(200, 0)  # 透明度設定
@@ -43,6 +48,11 @@ def gameover(screen: pg.Surface) -> None:
     time.sleep(5)  # 5秒間表示
 
 def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
+    """
+    引数：なし
+    戻り値：bb_imgs, bb_accs(爆弾画像リスト, 爆弾速度リスト)
+    10段階程度の大きさを変えた爆弾Surfaceのリストと加速度のリストを準備
+    """
     bb_imgs = []  # 爆弾画像リスト
     bb_accs = []  # 爆弾速度リスト
     for r in range(1, 11):
